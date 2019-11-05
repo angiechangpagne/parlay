@@ -2,38 +2,82 @@ const db=require('./parlayModel')
 //the database is from mysql
 const parlayController={};
 
+//id is initialized
 parlayController.createUser=(req,res,next)=>{
-    const{ id, name,initialAmount} =req.body;
+    const{ id, name,initialAmount, currentAmount,status} =req.body;
 
-    if(!initial){
+    if(!initialAmount){
         return res.status(400).json({
             success:false,
             message: 'missing bet',
         });
     }
 
-    const preparedStatementCreate=`INSERT INTO parlay (title,year,director)
-    values() RETURNING *`;
+    const preparedStatementCreate=`INSERT INTO parlay (name,initialAmount,currentAmount,status)
+    values($1,$2,$3,$4) RETURNING *`
+    ;
 
 
+    const values=[name,initialAmount,currentAmount,status];
 
-    const values=[name,initialAmount];
-    db.query()
+    db.query(preparedStatementCreate,values,(err,result)=>{
+        if(err){
+            console.log('Error in parlayControllre.createUser: ',err);
+            return res.sendStatus(500);
+        }
+        res.locals.parlay=result.rows;
+        return next();
+    });
 
-parlayController.getPLayers=(req,res,next)=>{
-    const preparedStatementGet=`SELECT * FROM parlay`;
 
-    db.query(text)
+    //using a promist
+    // db.query(text,values)
+    // .then(result => {
+    //     res.locals.parlay=result.rows;
+    //     next();
+    // })
+    // .catch(err => {
+    //     console.log('Eror in parlayController.createUser: ',err);
+    //     return res.sendStatus(500);
+    // })
+
+parlayController.getPlayers=(req,res,next)=>{
+    const preparedStatementGet=`SELECT * FROM parlay
+    `;
+
+    db.query(preparedStatementGet)
     .then(result=>{
-
+        res.locals.parlay=result.row;
+        next();
     })
-}
+    .catch(err=>{
+        console.log('Error in parlayController.getPlayers: ',err);
+        return res.sendStatus(500);
+    })
+};
+
 
 //withdraw player is withdraw round and entire game, bye felicia
 parlayController.withdrawPlayer=(req,res,next)=>{
+    const { id }=req.params;
 
+    const preparedStatementDelete=`
+    DELETE FROM parlay
+    WHERE id=$1
+    RETURNING *
+    `;
+
+    const values=[ id ] ;
+    db.query(preparedStatementDelete,values)
+    .then(result => {
+        res.locals.parlay=result.rows; //replace the database element with nothing?
+        next();
+    })
+    .catch(err => {
+        console.log('Error in parlayController.withdrawPlayer: ', err);
+        return res.sendStatus(500);
+    })
 }
-
 
 
 
