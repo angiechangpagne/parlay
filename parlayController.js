@@ -29,7 +29,16 @@ parlayController.createUser=(req,res,next)=>{
         return next();
     });
 
+}
+ 
+//randomly selects the players from database and use their intal inputted bets(initialAmounts) if they want to change amount they can edit(wimp!) or they can withdraw and leave the game(bye felicia)
+parlayController.generateGame=(req,res,next)=>{
+        
+}
 
+parlayController.changeAmount=(req,res,next) =>{
+    
+}
     //using a promist
     // db.query(text,values)
     // .then(result => {
