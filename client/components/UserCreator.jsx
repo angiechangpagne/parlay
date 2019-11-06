@@ -2,15 +2,32 @@
  * ************************************
  *
  * @module  UserCreator
- * @author
+ * @author ANGEN
  * @date
  * @description presentation component that takes user input for new market creation
  *
  * ************************************
  */
+ import React, {useState,useEffect } from 'react';
+ import { Link, withRouter } from 'react-router-dom';
 
 
- import React from 'react';
+
+ //require past history nodes
+ const userData=requires(''); //json data based on id?
+ 
+//hook for handling inputs
+const useInput=init => {
+    const [value,setValue]=useState(init);
+    const onChange= e => {
+        setValue(e.target.value);
+    }
+    return [value,onChange];
+}
+
+// const UserCreator = props => {
+//     const []
+// }
 
 
  const UserCreator=({

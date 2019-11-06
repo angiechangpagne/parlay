@@ -8,12 +8,21 @@ const parlayController=require('./parlayController');
 //the server aka index.js in server folder
 app.use(express.static(path.resolve(__dirname,'../dist')));
 app.use(express.json()); //express built in body parser
+// const bodyParser=require('body-parser');
+//app.use(bodyParser.json());
+//app.user(bodyParser.urlencoded({ extended: true }));
+app.use('/assets',express.static(path.resolve(__dirname,'../client/assets')));
 
+const apiRouter=require('./routes/api');
+
+app.use('/api',apiRouter); //define route handlers
 
 
 app.post('/parlay',parlayController.createUser,(req,res) => {
     res.json(res.locals.parlay);
 });
+
+app.get('/',(req,res) => res.status(200).sendFile(path.resolve(__dirname,'../client/index.html')));
 
 
 app.get('/parlay',parlayController.getParlay,(req,res) => {
@@ -49,3 +58,5 @@ app.use((err,req,res,next) => {
 
 
 app.listen(PORT, ()=>console.log(`listening on port ${PORT}...`));
+
+module.exports=app;
